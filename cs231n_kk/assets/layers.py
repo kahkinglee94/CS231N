@@ -39,6 +39,17 @@ def affine_backward(dout, cache):
     return dx, dw, db
 
 
+def relu_forward(x):
+    """
+    :param x: input from forward propagation
+    :return: out, cache
+    """
+    out = None
+    out = np.maximum(0, x)
+    cache = x
+    return out, cache
+
+
 def softmax_loss(x, y):
     """
     :param x: input from previous layer. Has shape [N, C]
