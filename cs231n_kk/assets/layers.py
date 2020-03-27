@@ -50,6 +50,16 @@ def relu_forward(x):
     return out, cache
 
 
+def relu_backward(dout, cache):
+    """
+    :param dout: gradient input
+    :param cache:
+    :return: output gradient
+    """
+    dx, x = None, cache
+    dx = dout * (x > 0)
+    return dx
+
 def softmax_loss(x, y):
     """
     :param x: input from previous layer. Has shape [N, C]
