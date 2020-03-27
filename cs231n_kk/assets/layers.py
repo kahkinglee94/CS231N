@@ -21,6 +21,24 @@ def affine_forward(x, w, b):
     return out, cache
 
 
+def affine_backward(dout, cache):
+    """
+    :param dout: Computed gradient from the "right" layer. Has shape [N, M]
+    :param cache: x, w, b of current layer
+    :return: Gradient with respect to x, w and b. (dx, dw, db)
+    """
+
+    x, w, b = cache
+    dim_shape = np.prod(x[0].shape)
+    batch_num = x.shape[0]
+    X = x.reshape(batch_num, dim_shape)
+    dx = dout.dot(w.T)
+    dx = dx.reshape(x.shape)
+    dw = X.T.dot(dout)
+    db = dout.sum(axis=0)
+    return dx, dw, db
+
+
 def softmax_loss(x, y):
     """
     :param x: input from previous layer. Has shape [N, C]
