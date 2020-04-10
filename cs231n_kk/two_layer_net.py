@@ -7,7 +7,7 @@ import numpy as np
 # back propagation
 
 
-def __init(self, input_dim=3*32*32, hidden_dim=100, num_classes=10, weight_scale=1e-3, reg=0.0):
+def __init__(self, input_dim=3*32*32, hidden_dim=100, num_classes=10, weight_scale=1e-3, reg=0.0):
     """
     :param input_dim: The dimension size of the input
     :param hidden_dim: An integer giving the size of the hidden layer
