@@ -89,3 +89,15 @@ class Solver(object):
         manually.
         """
         # Set up some variables for book-keeping
+        self.epoch = 0
+        self.best_val_acc = 0
+        self.best_params = {}
+        self.loss_history = []
+        self.train_acc_history = []
+        self.val_acc_history = []
+
+        # Make a deep copy of the optim_config for each parameter
+        self.optim_configs = {}
+        for p in self.model.params:
+            d = {k : v for k, v in self.optim_config.items()}
+            self.optim_configs[p] = d
