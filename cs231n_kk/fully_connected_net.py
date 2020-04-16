@@ -123,4 +123,3 @@ class FullyConnectedNet(object):
                 bn_params = self.bn_params[i]
             x, cache = affine_norm_relu_forward(x, w, b, gamma, beta, bn_params, self.normalization,
                                                 self.use_dropout, self.dropout_param)
-            
