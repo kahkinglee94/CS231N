@@ -163,6 +163,42 @@ def batchnorm_forward(x, gamma, beta, bn_param):
     return out, cache
 
 
+def layernorm_forward(x, gamma, beta, ln_param):
+    """
+    :param x: Input of shape [N, D]
+    :param gamma: Scale parameter of shape [D, ]
+    :param beta: Shift parameter of shape [D, ]
+    :param ln_param: Dictionary with the following keys:
+      - mode: 'train' or 'test'; required
+      - eps: Constant for numeric stability
+    :return:
+    A tuple of:
+    - out: of shape (N, D)
+    - cache: A tuple of values needed in the backward pass
+    """
+    out, cache = None, None
+    eps = ln_param.get('eps', 1e-5)
+    ###########################################################################
+    # TODO: Implement the training-time forward pass for layer norm.          #
+    # Normalize the incoming data, and scale and  shift the normalized data   #
+    # using gamma and beta.                                                  #
+    # HINT: this can be done by slightly modifying your training-time         #
+    # implementation of  batch normalization, and inserting a line or two of  #
+    # well-placed code. In particular, can you think of any matrix            #
+    # transformations you could perform, that would enable you to copy over   #
+    # the batch norm code and leave it almost unchanged?                      #
+    ###########################################################################
+    ln_param['mode'] = 'train' # same as batch norm in train mode
+    ln_param['layernorm'] = 1
+    # transpose x, gamma and beta
+    out, cache = batchnorm_forward(x, gamma.reshape(-1, 1), beta.reshape(-1, 1), ln_param)
+    # transpose output to get original dims
+    out = out.T
+
+    return out, cache
+
+
+
 def softmax_loss(x, y):
     """
     :param x: input from previous layer. Has shape [N, C]
