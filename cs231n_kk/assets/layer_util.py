@@ -13,3 +13,13 @@ def affine_relu_backward(dout, cache):
     da = relu_backward(dout, relu_cache)
     dx, dw, db = affine_backward(da, fc_cache)
     return dx, dw, db
+
+
+def affine_batchnorm_relu_forward(X, W, b, gamma, beta, bn_param, normalization, dropout, do_param):
+    bn_cache, do_cache = None, None
+    affine_out, affine_cache = affine_forward(X, W, b)
+    if normalization == 'batchnorm':
+        bn_out, bn_cache = batchnorm_forward(affine_out, gamma, beta, bn_param)
+    elif normalization == 'layernorm':
+        bn_out, bn_cache = layernorm_forward(affine_out, gamma, beta, bn_param)
+    relu_out, relu_cache = relu_forward(bn_out)
