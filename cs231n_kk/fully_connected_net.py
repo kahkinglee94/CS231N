@@ -123,3 +123,42 @@ class FullyConnectedNet(object):
                 bn_params = self.bn_params[i]
             x, cache = affine_norm_relu_forward(x, w, b, gamma, beta, bn_params, self.normalization,
                                                 self.use_dropout, self.dropout_param)
+            caches.append(cache)
+        w = self.params['W'+str(self.num_layers)]
+        b = self.params['B'+str(self.num_layers)]
+        scores, cache = affine_forward(x, w, b)
+        caches.append(cache)
+
+        # if test mode, return early
+        if mode == 'test':
+            return scores
+
+        loss, grads = 0.0, {}
+        ############################################################################
+        # TODO: Implement the backward pass for the fully-connected net. Store the #
+        # loss in the loss variable and gradients in the grads dictionary. Compute #
+        # data loss using softmax, and make sure that grads[k] holds the gradients #
+        # for self.params[k]. Don't forget to add L2 regularization!               #
+        #                                                                          #
+        # When using batch/layer normalization, you don't need to regularize the   #
+        # scale and shift parameters.                                              #
+        #                                                                          #
+        # NOTE: To ensure that your implementation matches ours and you pass the   #
+        # automated tests, make sure that your L2 regularization includes a factor #
+        # of 0.5 to simplify the expression for the gradient.                      #
+        ############################################################################
+        # calculate loss
+        loss, softmax_grad = softmax_loss(scores, y)
+        for i in range(self.num_layers):
+            w = self.params['W'+str(i)]
+            loss += 0.5 * self.reg * np.sum(w * w)
+
+        #calculate gradient
+        dout = softmax_grad
+        dout, dw, db = affine_backward(dout, caches[self.num_layers - 1])
+        grads['W'+self.num_layers] = dw + self.reg * self.params['W'+str(self.num_layers)]
+        grads['B'+self.num_layers] = db
+
+        for i in range(self.num_layers - 2, -1, -1):
+            dx, dw, db, dgamma, dbeta = affine_norm_relu_backward(dout, caches[i], self.normalization, self.use_dropout)
+
