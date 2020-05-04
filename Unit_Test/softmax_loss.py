@@ -1,4 +1,5 @@
 import numpy as np
+import tensorflow as tf
 
 
 def __init__(self, input_dim=3 * 32 * 32, hidden_dim=100, num_classes=10,
@@ -247,6 +248,8 @@ def softmax_loss2(x, y):
     dx = normalized_score
     return loss, dx
 
+
+# print("GPU is ", "available" if tf.test.is_gpu_available else "not available")
 
 num_inputs = 2
 input_shape = (4, 5, 6)
