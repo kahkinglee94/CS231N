@@ -247,6 +247,25 @@ def dropout_forward(x, dropout_param):
     return out, cache
 
 
+def dropout_backward(dout, cache):
+    """
+        Perform the backward pass for (inverted) dropout.
+        Inputs:
+        - dout: Upstream derivatives, of any shape
+        - cache: (dropout_param, mask) from dropout_forward.
+        """
+    dropout_param, mask = cache
+    mode = dropout_param['mode']
+
+    dx = None
+    if mode == 'train':
+        dx = dout * mask
+    elif mode == 'test':
+        dx = dout
+
+    return dx
+
+
 def softmax_loss(x, y):
     """
     :param x: input from previous layer. Has shape [N, C]
