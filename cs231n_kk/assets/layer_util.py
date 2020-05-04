@@ -23,3 +23,5 @@ def affine_batchnorm_relu_forward(X, W, b, gamma, beta, bn_param, normalization,
     elif normalization == 'layernorm':
         bn_out, bn_cache = layernorm_forward(affine_out, gamma, beta, bn_param)
     relu_out, relu_cache = relu_forward(bn_out)
+    if dropout:
+        do_out, do_cache = dropout_forward(relu_out, do_param)
