@@ -25,3 +25,4 @@ def affine_batchnorm_relu_forward(X, W, b, gamma, beta, bn_param, normalization,
     relu_out, relu_cache = relu_forward(bn_out)
     if dropout:
         do_out, do_cache = dropout_forward(relu_out, do_param)
+    return do_out, (affine_cache, bn_cache, relu_cache, do_cache)
