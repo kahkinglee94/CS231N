@@ -1,4 +1,4 @@
-from cs231n_kk.assets import *
+from cs231n_kk.assets.layer_util import *
 import numpy as np
 
 
