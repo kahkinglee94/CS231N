@@ -163,6 +163,52 @@ def batchnorm_forward(x, gamma, beta, bn_param):
     return out, cache
 
 
+def batchnorm_backward(dout, cache):
+    """
+        Backward pass for batch normalization.
+        For this implementation, you should write out a computation graph for
+        batch normalization on paper and propagate gradients backward through
+        intermediate nodes.
+        Inputs:
+        - dout: Upstream derivatives, of shape (N, D)
+        - cache: Variable of intermediates from batchnorm_forward.
+        Returns a tuple of:
+        - dx: Gradient with respect to inputs x, of shape (N, D)
+        - dgamma: Gradient with respect to scale parameter gamma, of shape (D,)
+        - dbeta: Gradient with respect to shift parameter beta, of shape (D,)
+    """
+    dx, dgamma, dbeta = None, None, None
+
+    # N = 1.0 * dout.shape[0]
+    # dgamma = np.sum(dout * cache['z'], axis=cache['axis'])
+    # dbeta = dout.sum(axis=cache['axis'])
+    # dfdz = dout * cache['gamma']
+    # dzdu = -1 / cache['std']
+    # dvdu = -2/N * np.sum(cache['x'] - cache['mean'])
+    # dzdv = -0.5 * (cache['var'] ** -1.5) * (cache['x'] - cache['mean'])
+    # dzdx = 1 / cache['std']
+    # dvdx = 2/N * (cache['x'] - cache['mean'])
+    # dudx = 1 / N
+    # dx = dfdz * dzdx + np.sum(dfdz*dzdu, axis=0)*dudx + np.sum(dzdv*dvdx, axis=0)
+
+    dbeta = dout.sum(axis=cache['axis'])
+    dgamma = np.sum(dout * cache['z'], axis=cache['axis'])
+
+    N = 1.0 * dout.shape[0]
+    dfdz = dout * cache['gamma']  # [NxD]
+    dudx = 1 / N  # [NxD]
+    dvdx = 2 / N * (cache['x'] - cache['mean'])  # [NxD]
+    dzdx = 1 / cache['std']  # [NxD]
+    dzdu = -1 / cache['std']  # [1xD]
+    dzdv = -0.5 * (cache['var'] ** -1.5) * (cache['x'] - cache['mean'])  # [NxD]
+    dvdu = -2 / N * np.sum(cache['x'] - cache['mean'], axis=0)  # [1xD]
+
+    dx = dfdz * dzdx + np.sum(dfdz * dzdu, axis=0) * dudx + \
+         np.sum(dfdz * dzdv, axis=0) * (dvdx + dvdu * dudx)
+
+    return dx, dgamma, dbeta
+
+
 def layernorm_forward(x, gamma, beta, ln_param):
     """
     :param x: Input of shape [N, D]
