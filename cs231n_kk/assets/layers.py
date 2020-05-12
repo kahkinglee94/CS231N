@@ -209,6 +209,30 @@ def batchnorm_backward(dout, cache):
     return dx, dgamma, dbeta
 
 
+def batchnorm_backward_alt(dout, cache):
+    """
+        Alternative backward pass for batch normalization.
+        For this implementation you should work out the derivatives for the batch
+        normalizaton backward pass on paper and simplify as much as possible. You
+        should be able to derive a simple expression for the backward pass.
+        See the jupyter notebook for more hints.
+
+        Note: This implementation should expect to receive the same cache variable
+        as batchnorm_backward, but might not use all of the values in the cache.
+        Inputs / outputs: Same as batchnorm_backward
+        """
+    dx, dgamma, dbeta = None, None, None
+    dgamma = np.sum(dout * cache['z'], axis=cache['axis'])
+    dbeta = dout.sum(axis=cache['axis'])
+
+    dfdz = dout * cache['gamma']
+    dx = dfdz - np.sum(dfdz, axis=0) - np.sum(dfdz*cache['z'], axis=0) * cache['z']
+    dx /= cache['std']
+
+    return dx, dgamma, dbeta
+
+
+
 def layernorm_forward(x, gamma, beta, ln_param):
     """
     :param x: Input of shape [N, D]
