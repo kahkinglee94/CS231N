@@ -232,7 +232,6 @@ def batchnorm_backward_alt(dout, cache):
     return dx, dgamma, dbeta
 
 
-
 def layernorm_forward(x, gamma, beta, ln_param):
     """
     :param x: Input of shape [N, D]
@@ -266,6 +265,30 @@ def layernorm_forward(x, gamma, beta, ln_param):
     out = out.T
 
     return out, cache
+
+
+def layernorm_backward(dout, cache):
+    """
+        Backward pass for layer normalization.
+        For this implementation, you can heavily rely on the work you've done already
+        for batch normalization.
+        Inputs:
+        - dout: Upstream derivatives, of shape (N, D)
+        - cache: Variable of intermediates from layernorm_forward.
+        Returns a tuple of:
+        - dx: Gradient with respect to inputs x, of shape (N, D)
+        - dgamma: Gradient with respect to scale parameter gamma, of shape (D,)
+        - dbeta: Gradient with respect to shift parameter beta, of shape (D,)
+    """
+    dx, dgamma, dbeta = None, None, None
+
+    # transpose dout because we transposed original input, x, in forward call
+    dx, dgamma, dbeta = batchnorm_backward_alt(dout.T, cache)
+
+    # transpose gradients w.r.t. input, x, to their original dims
+    dx = dx.T
+
+    return dx, dgamma, dbeta
 
 
 def dropout_forward(x, dropout_param):
