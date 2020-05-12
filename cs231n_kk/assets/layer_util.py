@@ -49,5 +49,5 @@ def affine_norm_relu_backward(dout, cache, normalization, dropout):
     # batch/layer norm
     dgamma, dbeta = None, None
     if normalization == 'batchnorm':
+        # dout, dgamma, dbeta = batchnorm_backward(dout, bn_cache)
         dout, dgamma, dbeta = batchnorm_backward_alt(dout, bn_cache)
-        # dout, dgamma, dbeta = batchnorm_backward_alt(dout, bn_cache)
